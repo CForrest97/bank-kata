@@ -1,6 +1,6 @@
-import { TransactionRepository } from './TransactionRepository';
-import Transaction from './Transaction';
-import { Clock } from './Clock';
+import TransactionRepository from './doc/TransactionRepository';
+import Transaction from './doc/Transaction';
+import Clock from './doc/Clock';
 
 export default class TransactionHistory implements TransactionRepository {
   private clock: Clock;

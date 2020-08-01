@@ -1,11 +1,17 @@
-import Console from '../../src/Console';
-import Transaction from '../../src/Transaction';
+import StatementPrinter from '../../../src/Bank/StatementPrinter';
+import Transaction from '../../../src/Bank/doc/Transaction';
 
 describe('Console', () => {
+  const mockPrint = jest.fn();
+  let console: StatementPrinter;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    console = new StatementPrinter(mockPrint);
+  });
+
   it('should print an empty statement', () => {
     const transactions: Transaction[] = [];
-    const mockPrint = jest.fn();
-    const console = new Console(mockPrint);
 
     console.print(transactions);
 
@@ -15,8 +21,6 @@ describe('Console', () => {
     const transactions: Transaction[] = [
       { amount: 100, date: '10/11/2020' },
     ];
-    const mockPrint = jest.fn();
-    const console = new Console(mockPrint);
 
     console.print(transactions);
 
@@ -28,8 +32,6 @@ describe('Console', () => {
       { amount: 100, date: '10/11/2020' },
       { amount: -100, date: '11/12/2020' },
     ];
-    const mockPrint = jest.fn();
-    const console = new Console(mockPrint);
 
     console.print(transactions);
 

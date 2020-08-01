@@ -1,7 +1,7 @@
-import Account from '../../src/Account';
-import TransactionHistory from '../../src/TransactionHistory';
-import Console from '../../src/Console';
-import { Clock } from '../../src/Clock';
+import Account from '../../../src/Bank/Account';
+import TransactionHistory from '../../../src/Bank/TransactionHistory';
+import StatementPrinter from '../../../src/Bank/StatementPrinter';
+import Clock from '../../../src/Bank/doc/Clock';
 
 describe('account service', () => {
   it('should be able to handle deposits, withdrawals and printing', () => {
@@ -13,7 +13,7 @@ describe('account service', () => {
 
     const clock: Clock = { todayAsString: mockTodayAsString };
     const transactionHistory: TransactionHistory = new TransactionHistory(clock);
-    const console: Console = new Console(mockPrintLine);
+    const console: StatementPrinter = new StatementPrinter(mockPrintLine);
 
     const account = new Account(transactionHistory, console);
 

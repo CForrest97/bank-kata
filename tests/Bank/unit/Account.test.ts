@@ -1,7 +1,7 @@
-import Account from '../../src/Account';
-import { TransactionRepository } from '../../src/TransactionRepository';
-import { StatementPrinter } from '../../src/StatementPrinter';
-import Transaction from '../../src/Transaction';
+import Account from '../../../src/Bank/Account';
+import TransactionRepository from '../../../src/Bank/doc/TransactionRepository';
+import IStatementPrinter from '../../../src/Bank/doc/IStatementPrinter';
+import Transaction from '../../../src/Bank/doc/Transaction';
 
 describe('Account unit test', () => {
   const mockAddDeposit = jest.fn();
@@ -15,7 +15,7 @@ describe('Account unit test', () => {
     allTransactions: mockAllTransactions,
   };
 
-  const statementPrinter: StatementPrinter = { print: mockPrint };
+  const statementPrinter: IStatementPrinter = { print: mockPrint };
 
   let account: Account;
 
@@ -29,7 +29,7 @@ describe('Account unit test', () => {
 
     expect(mockAddDeposit).toBeCalledWith(100);
   });
-  it('should store a withdraw transaction', () => {
+  it('should store a withdrawal transaction', () => {
     account.withdraw(100);
 
     expect(mockAddWithdrawal).toBeCalledWith(100);

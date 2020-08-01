@@ -1,12 +1,12 @@
-import { TransactionRepository } from './TransactionRepository';
-import { StatementPrinter } from './StatementPrinter';
+import TransactionRepository from './doc/TransactionRepository';
+import IStatementPrinter from './doc/IStatementPrinter';
 
 export default class Account {
   private transactionRepository: TransactionRepository;
 
-  private statementPrinter: StatementPrinter;
+  private statementPrinter: IStatementPrinter;
 
-  constructor(transactionRepository: TransactionRepository, statementPrinter: StatementPrinter) {
+  constructor(transactionRepository: TransactionRepository, statementPrinter: IStatementPrinter) {
     this.transactionRepository = transactionRepository;
     this.statementPrinter = statementPrinter;
   }

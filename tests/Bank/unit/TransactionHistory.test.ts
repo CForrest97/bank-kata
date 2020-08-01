@@ -1,5 +1,5 @@
-import TransactionHistory from '../../src/TransactionHistory';
-import { Clock } from '../../src/Clock';
+import TransactionHistory from '../../../src/Bank/TransactionHistory';
+import Clock from '../../../src/Bank/doc/Clock';
 
 describe('TransactionHistory', () => {
   const clock: Clock = { todayAsString: jest.fn().mockReturnValue('01/08/2020') };
