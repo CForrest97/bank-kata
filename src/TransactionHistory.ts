@@ -1,18 +1,27 @@
-import { TransactionRecorder, Transaction } from './AccountService';
-import { Store } from './Store';
+import { TransactionRepository } from './TransactionRepository';
+import Transaction from './Transaction';
+import { Clock } from './Clock';
 
-export default class TransactionHistory implements TransactionRecorder {
-  store: Store;
+export default class TransactionHistory implements TransactionRepository {
+  private clock: Clock;
 
-  constructor(store: Store) {
-    this.store = store;
+  private transactions: Transaction[] = [];
+
+  constructor(clock: Clock) {
+    this.clock = clock;
   }
 
-  pullTransactions(): Transaction[] {
-    return this.store.pullEntries();
+  addDeposit(amount: number): void {
+    const depositTransaction = { date: this.clock.todayAsString(), amount };
+    this.transactions.push(depositTransaction);
   }
 
-  pushTransaction(transaction: Transaction): void {
-    this.store.putEntry(transaction);
+  addWithdrawal(amount: number): void {
+    const withdrawalTransaction = { date: this.clock.todayAsString(), amount: -amount };
+    this.transactions.push(withdrawalTransaction);
+  }
+
+  allTransactions(): Transaction[] {
+    return this.transactions;
   }
 }

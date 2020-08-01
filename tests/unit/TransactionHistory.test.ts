@@ -1,26 +1,27 @@
 import TransactionHistory from '../../src/TransactionHistory';
-import { Store } from '../../src/Store';
+import { Clock } from '../../src/Clock';
 
-describe('transactionHistory', () => {
-  it('should store a transaction', () => {
-    const putEntryMock = jest.fn();
-    const store: Store = { putEntry: putEntryMock, pullEntries: jest.fn() };
-    const transactionHistory = new TransactionHistory(store);
-    const transaction = { amount: 1000, date: '10/10/20' };
+describe('TransactionHistory', () => {
+  const clock: Clock = { todayAsString: jest.fn().mockReturnValue('01/08/2020') };
 
-    transactionHistory.pushTransaction(transaction);
+  let transactionHistory: TransactionHistory;
 
-    expect(putEntryMock).toBeCalledWith(transaction);
+  beforeEach(() => {
+    transactionHistory = new TransactionHistory(clock);
   });
-  it('should return stored transactions', () => {
-    const expectedTransactions = [{ amount: 1000, date: '10/10/20' }, { amount: -1000, date: '11/10/20' }];
-    const mockPullEntries = jest.fn().mockReturnValue(expectedTransactions);
-    const store: Store = { putEntry: jest.fn(), pullEntries: mockPullEntries };
-    const transactionHistory = new TransactionHistory(store);
 
-    const transactions = transactionHistory.pullTransactions();
+  it('should create and store a deposit transaction', () => {
+    transactionHistory.addDeposit(100);
 
-    expect(mockPullEntries).toBeCalled();
-    expect(transactions).toBe(expectedTransactions);
+    const transactions = transactionHistory.allTransactions();
+
+    expect(transactions).toEqual([{ date: '01/08/2020', amount: 100 }]);
+  });
+  it('should create and store a withdrawal transaction', () => {
+    transactionHistory.addWithdrawal(100);
+
+    const transactions = transactionHistory.allTransactions();
+
+    expect(transactions).toEqual([{ date: '01/08/2020', amount: -100 }]);
   });
 });

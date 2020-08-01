@@ -1,40 +1,31 @@
-import { AccountService, StatementPrinter } from '../../src/AccountService';
+import Account from '../../src/Account';
 import TransactionHistory from '../../src/TransactionHistory';
-import { Store } from '../../src/Store';
-import TransactionPrinter from '../../src/TransactionPrinter';
+import Console from '../../src/Console';
+import { Clock } from '../../src/Clock';
 
 describe('account service', () => {
   it('should be able to handle deposits, withdrawals and printing', () => {
-    const mockPrint = jest.fn();
+    const mockPrintLine = jest.fn();
+    const mockTodayAsString = jest.fn()
+      .mockReturnValueOnce('10/01/2012')
+      .mockReturnValueOnce('13/01/2012')
+      .mockReturnValueOnce('14/01/2012');
 
-    const printer: StatementPrinter = new TransactionPrinter(mockPrint);
-    const clock = { getDate: jest.fn() };
+    const clock: Clock = { todayAsString: mockTodayAsString };
+    const transactionHistory: TransactionHistory = new TransactionHistory(clock);
+    const console: Console = new Console(mockPrintLine);
 
-    const mockPutEntry = jest.fn();
-    const mockPullEntries = jest.fn().mockReturnValue([
-      { date: '10/01/2012', amount: 1000 },
-      { date: '13/01/2012', amount: 2000 },
-      { date: '14/01/2012', amount: -500 },
-    ]);
+    const account = new Account(transactionHistory, console);
 
-    const store: Store = {
-      putEntry: mockPutEntry,
-      pullEntries: mockPullEntries,
-    };
+    account.deposit(1000);
+    account.deposit(2000);
+    account.withdraw(500);
 
-    const transactionHistory = new TransactionHistory(store);
+    account.printStatement();
 
-    const accountService = new AccountService(printer, clock, transactionHistory);
-
-    accountService.deposit(1000);
-    accountService.deposit(2000);
-    accountService.withdraw(500);
-
-    accountService.printStatement();
-
-    expect(mockPrint).toBeCalledWith(`Date       || Amount || Balance
-14/01/2012 || -500  || 2500
-13/01/2012 || 2000  || 3000
-10/01/2012 || 1000  || 1000`);
+    expect(mockPrintLine).nthCalledWith(1, 'Date || Amount || Balance');
+    expect(mockPrintLine).nthCalledWith(2, '14/01/2012 || -500 || 2500');
+    expect(mockPrintLine).nthCalledWith(3, '13/01/2012 || 2000 || 3000');
+    expect(mockPrintLine).nthCalledWith(4, '10/01/2012 || 1000 || 1000');
   });
 });
